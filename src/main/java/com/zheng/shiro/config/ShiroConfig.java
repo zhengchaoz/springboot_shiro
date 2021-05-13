@@ -28,8 +28,13 @@ public class ShiroConfig {
          * perms：拥有对某个资源的权限才能访问
          */
 
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        Map<String, String> filterMap = new LinkedHashMap<>();
+//        filterMap.put("/user/add", "authc");
+//        filterMap.put("/user/update", "authc");
+        filterMap.put("/user/*", "authc");
+        factoryBean.setFilterChainDefinitionMap(filterMap);
+        // 没有权限就跳转登录界面
+        factoryBean.setLoginUrl("/login");
 
         return factoryBean;
     }
