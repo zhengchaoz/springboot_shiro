@@ -5,6 +5,7 @@ import com.zheng.shiro.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -22,7 +23,12 @@ public class UserRealm extends AuthorizingRealm {
     // 授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        info.addStringPermission(user.getPerms());
+//        info.addStringPermission("user:add");
+        return info;
     }
 
     // 认证   
@@ -34,7 +40,7 @@ public class UserRealm extends AuthorizingRealm {
             return null;// 没有匹配到就返回null，会出发相应的异常信息
         }
         // 用户认证， 密码， 认证名
-        return new SimpleAuthenticationInfo("", user.getPwd(), "");
+        return new SimpleAuthenticationInfo(user, user.getPwd(), "");
     }
 
 }
